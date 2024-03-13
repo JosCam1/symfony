@@ -1,0 +1,125 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tareas{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        .btn-secondary {
+            margin-top: 10px;
+        }
+
+        .list-group-item {
+            border: none;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .list-group-item:last-child {
+            border-bottom: none;
+        }
+
+        .btn-danger {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            border-radius: 0.25rem;
+        }
+
+        #FormularioInsertarTarea {
+            margin-top: 20px;
+        }
+
+        #texto {
+            width: calc(100% - 100px);
+            border-radius: 0;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+
+        #boton {
+            border-radius: 0;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mt-4">TAREAS DE {{ usuario.nombre }}</h1>
+            <a href="{{ path('logout') }}" class="btn btn-secondary">Cerrar Sesión</a>
+        </div>
+
+        <h2 class="mb-3">Tareas existentes:</h2>
+        <ul class="list-group">
+            {% for tarea in tareas %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>{{ tarea.titulo }}</span>
+                    <div class="btn-group" role="group">
+                        <a href="{{ path('eliminar_tarea', { 'id': tarea.id }) }}" class="btn btn-danger">Eliminar</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="mt-4">
+            <h2>Agregar nueva tarea:</h2>
+            <form id="FormularioInsertarTarea">
+            <div class="input-group">
+                <input type="text" id="titulo" class="form-control" placeholder="Nueva Tarea" name="titulo">
+                <div class="input-group-append">
+                    <button type="submit" id="boton" class="btn btn-primary">Añadir Tarea</button>
+                </div>
+             </div>
+            </form>
+        </div>
+    </div>
+    <script>
+    document.getElementById("FormularioInsertarTarea").addEventListener("submit", function(event) {
+        event.preventDefault(); // Evitar la recarga de la página
+
+        var titulo = document.getElementById("titulo").value;
+
+        // Crear un objeto FormData para enviar los datos del formulario
+        var formData = new FormData();
+        formData.append("titulo", titulo);
+
+        // Realizar la solicitud mediante fetch
+        fetch("{{ path('agregar_tarea') }}", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Hubo un problema al añadir la tarea.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Tarea añadida correctamente:", data);
+            // Puedes realizar cualquier otra acción aquí, como actualizar la lista de tareas
+        })
+        .catch(error => {
+            console.error("Error al añadir la tarea:", error);
+        });
+    });
+</script>
+{% endblock %}
