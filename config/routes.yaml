@@ -1,0 +1,25 @@
+crearUsuarios:
+    path: /
+    controller: App\Controller\Controller::index
+inicio_sesion:
+    path: /inicio_sesion
+    controller: App\Controller\Controller::iniciarSesion
+ruta_registro:
+    path: /registro
+    controller: App\Controller\Controller::crearUsuario
+ver_tareas:
+    path: /ver_tareas
+    controller: App\Controller\Controller::verTareas
+index:
+    path: /
+    controller: App\Controller\Controller::index
+agregar_tarea:
+    path: /agregar_tarea
+    controller: App\Controller\Controller::agregarTarea
+    methods: [POST]
+logout:
+    path: /logout
+    controller: App\Controller\Controller::logout
+eliminar_tarea:
+    path: '/eliminar_tarea/{id}'
+    controller: 'App\Controller\Controller::eliminarTarea'
